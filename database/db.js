@@ -1,7 +1,7 @@
 
 const { Client } = require('pg');
 
- module.exports = {
+module.exports = {
     /**
  * Execute query database and response 
  * @param {query} query 
@@ -45,6 +45,7 @@ const { Client } = require('pg');
             client.end().then(() => {
                 res.status(200).send(e)
             }).catch((err) => {
+                console.log(err);
                 res.status(504).send(err)
             })
         })
@@ -81,6 +82,7 @@ const { Client } = require('pg');
         client.query(query, params).then((r) => {
             cb(null, r, client)
         }).catch((e) => {
+            console.log(e);
             cb(e, null, client)
         })
     }
