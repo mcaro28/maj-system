@@ -1,10 +1,1 @@
-# maj-system
-
-
-aslas,.,.
-as
-
-
-
-
-as
+# maj-systems
