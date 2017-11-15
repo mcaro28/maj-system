@@ -1,7 +1,7 @@
 
 const { Client } = require('pg');
 
-module.exports = {
+ module.exports = {
     /**
  * Execute query database and response 
  * @param {query} query 
@@ -32,7 +32,6 @@ module.exports = {
                 }).catch((e) => {
                     res.status(504).send(err)
                 })
-
             }
         });
 
@@ -57,14 +56,22 @@ module.exports = {
      * @param {params} params
      * @param {cb} calñback
      */
-    query_callback: (query, params, cb) => {
-        const client = new Client({
+    query_callback: (token, query, params, cb) => {
+        var connect = {
             user: 'autenticacion',
             host: 'localhost',
             database: 'nativapps_school',
             password: 'LaFacil123',
             port: 5432,
-        });
+        };
+
+        if (token) {
+            const t = require('../security/token').decipher_token;
+            var user = t(token);
+            connect.user = user.pg_user;
+            connect.password = user.pg_pass;
+        }
+        const client = new Client(connect);
         client.connect((err) => {
             if (err) {
                 cb(err, null, client)

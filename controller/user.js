@@ -1,9 +1,10 @@
+/* Import databse connect postgresql*/
 const db = require('../database/db');
 
 const login = (user, password, res) => {
     var q = 'select * from autenticacion."logged_session"($1,$2)';
 
-    db.query_callback(q, [user, password], (e, r, c) => {
+    db.query_callback(null, q, [user, password], (e, r, c) => {
         if (e) {
             c.end().then(() => {
                 res.status(200).send(e)
@@ -41,9 +42,8 @@ const login = (user, password, res) => {
 }
 
 const listarUsuarios = (token, res) => {
-    var q = 'SELECT * FROM autenticacion.usuarios';
+    var q = 'SELECT * FROM autenticacion.listar_usuarios()';
     db.query_reponse(token, q, null, res);
-
 }
 
 module.exports = {

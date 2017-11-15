@@ -3,8 +3,9 @@
 module.exports = (app) => {
 
   app.get('/api', (req, res) => {
-    const db = require('../database/db');
-    db.query_reponse('SELECT now()', null, res);
+    res.status(200).send({
+      message: 'Welcome to the beginning of api.',
+    })
   });
 
   app.get('/login', (req, res) => {
