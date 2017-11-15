@@ -1,17 +1,29 @@
 
-const db = require('../controller/db');
 
 module.exports = (app) => {
+
   app.get('/api', (req, res) => {
-    console.log(req.query);
-    var data = req.query;
-    db.query('SELECT NOW()',null, (err, r) => {
+    const db = require('../database/db');
+    db.query_reponse('SELECT now()', null, res);
+  });
 
-      if (err) {
-        res.status(504).send(err);
-      }
+  app.get('/login', (req, res) => {
+    const u = require('../controller/user');
+    var user = req.query.user;
+    var pass = req.query.pass;
+    u.login(user, pass, res);
+  });
 
-      res.status(200).send(r.rows)
-    })
+  app.post('/login', (req, res) => {
+    const u = require('../controller/user');
+    var user = req.body.user;
+    var pass = req.body.pass;
+    u.login(user, pass, res);
+  });
+
+  app.post('/admin/listar/usuarios', (req, res) => {
+    const u = require('../controller/user');
+    var token = req.body.token;
+    u.listarUsarios(token, res);
   });
 }
