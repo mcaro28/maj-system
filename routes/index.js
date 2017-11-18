@@ -17,6 +17,7 @@ module.exports = (app) => {
 
   app.post('/login', (req, res) => {
     const u = require('../controller/user');
+    console.log(req.body);
     var user = req.body.user;
     var pass = req.body.pass;
     u.login(user, pass, res);
@@ -25,6 +26,11 @@ module.exports = (app) => {
   app.post('/admin/listar/usuarios', (req, res) => {
     const u = require('../controller/user');
     var token = req.body.token;
-    u.listarUsarios(token, res);
+    u.listarUsuarios(token, res);
+  });
+  app.get('/admin/listar/usuarios', (req, res) => {
+    const u = require('../controller/user');
+    var token = req.query.token;
+    u.listarUsuario(token, res);
   });
 }

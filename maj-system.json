@@ -1,0 +1,16 @@
+('001','000','#','home','home',true),
+('002','000','#','briefcase','basic',true),
+('003','000','#','bed','system',true),
+('004','000','#','cog','config',true),
+
+
+('005', '001', '/#/home/home1'    ,null, 'Home 1',true),
+('006', '001', '/#'    ,null, 'Home 2',true),
+('007', '001', '/#'    ,null, 'Home 3',true),
+
+('008','002','/#',null,'Basic 1',true),
+('009','002','/#',null,'Basic 2',true),
+('010','002','/#',null,'Basic 3',true),
+
+('011','003','/#',null,'System 1',true),
+('012','003','/#',null,'System 2',true);

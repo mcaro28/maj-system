@@ -20,6 +20,13 @@ module.exports = {
         if (token) {
             const t = require('../security/token').decipher_token;
             var user = t(token);
+            if (!user) {
+                res.status(404).send({
+                    estado: 'ERROR',
+                    descripcion: 'No fue posible validar el token, Comuniquese con el administrador'
+                })
+                return;
+            }
             connect.user = user.pg_user;
             connect.password = user.pg_pass;
         }
@@ -69,21 +76,29 @@ module.exports = {
         if (token) {
             const t = require('../security/token').decipher_token;
             var user = t(token);
+            if (!user) {
+                cb({ estado: 'ERROR', descripcion: 'No fue posible validar el token, Comuniquese con el administrador' }, null)
+                return;
+            }
+
             connect.user = user.pg_user;
             connect.password = user.pg_pass;
         }
         const client = new Client(connect);
         client.connect((err) => {
             if (err) {
-                cb(err, null, client)
+                cb(err, null)
             }
         });
 
         client.query(query, params).then((r) => {
-            cb(null, r, client)
+            client.end().then(() => {
+                cb(null, r)
+            }).catch((err) => {
+                cb(err, null)
+            })
         }).catch((e) => {
-            console.log(e);
-            cb(e, null, client)
+            cb(e, null)
         })
     }
 }

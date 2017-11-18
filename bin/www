@@ -5,7 +5,7 @@
  */
 
 var app = require('../app');
-var debug = require('debug')('ejercicio21:server');
+var debug = require('debug')('maj-system:server');
 var http = require('http');
 
 /**

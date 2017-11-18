@@ -9,8 +9,8 @@ const cipher_token = (user, pass) => {
 }
 const decipher_token = (token) => {
     var key = cryton.crypto(new Date().toLocaleDateString());
-    var data = token.split(key);
-    if (data.length > 0) {
+    var data = token.split(key);    
+    if (data.length === 2) {
         return {
             pg_user: cryton.decrypto(data[0]),
             pg_pass: cryton.decrypto(data[1]),
