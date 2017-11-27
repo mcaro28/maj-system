@@ -1,5 +1,6 @@
 
 const { Client } = require('pg');
+var connect = require('./config');
 
 module.exports = {
     /**
@@ -9,20 +10,13 @@ module.exports = {
  * @param {res} response 
  */
     query_reponse: (token, query, params, res) => {
-
-        var connect = {
-            user: 'autenticacion',
-            host: 'localhost',
-            database: 'nativapps_school',
-            password: 'LaFacil123',
-            port: 5432,
-        };
         if (token) {
             const t = require('../security/token').decipher_token;
             var user = t(token);
             if (!user) {
-                res.status(404).send({
-                    estado: 'ERROR',
+                res.status(200).send({
+                    type: 'danger',
+                    text: 'No fue posible validar el token, Comuniquese con el administrador',
                     descripcion: 'No fue posible validar el token, Comuniquese con el administrador'
                 })
                 return;
@@ -35,9 +29,15 @@ module.exports = {
         client.connect((err) => {
             if (err) {
                 client.end().then(() => {
-                    res.status(200).send(err)
+                    res.status(403).send({
+                        type: 'danger',
+                        message: JSON.stringify(err)
+                    })
                 }).catch((e) => {
-                    res.status(504).send(err)
+                    res.status(403).send({
+                        type: 'danger',
+                        message: JSON.stringify(e)
+                    })
                 })
             }
         });
@@ -46,14 +46,22 @@ module.exports = {
             client.end().then(() => {
                 res.status(200).send(r.rows)
             }).catch((e) => {
-                res.status(504).send(err)
+                res.status(403).send({
+                    type: 'danger',
+                    message: JSON.stringify(e)
+                })
             })
         }).catch((e) => {
             client.end().then(() => {
-                res.status(200).send(e)
+                res.status(403).send({
+                    type: 'danger',
+                    message: JSON.stringify(e)
+                })
             }).catch((err) => {
-                console.log(err);
-                res.status(504).send(err)
+                res.status(403).send({
+                    type: 'danger',
+                    message: JSON.stringify(err)
+                })
             })
         })
     },
@@ -65,19 +73,15 @@ module.exports = {
      * @param {cb} calñback
      */
     query_callback: (token, query, params, cb) => {
-        var connect = {
-            user: 'autenticacion',
-            host: 'localhost',
-            database: 'nativapps_school',
-            password: 'LaFacil123',
-            port: 5432,
-        };
-
         if (token) {
             const t = require('../security/token').decipher_token;
             var user = t(token);
             if (!user) {
-                cb({ estado: 'ERROR', descripcion: 'No fue posible validar el token, Comuniquese con el administrador' }, null)
+                cb({
+                    type: 'danger',
+                    text: 'No fue posible validar el token, comuniquese con el administrador',
+                    descripcion: 'No fue posible validar el token, comuniquese con el administrador'
+                }, null)
                 return;
             }
 
@@ -87,7 +91,10 @@ module.exports = {
         const client = new Client(connect);
         client.connect((err) => {
             if (err) {
-                cb(err, null)
+                cb({
+                    type: 'danger',
+                    message: JSON.stringify(err)
+                }, null)
             }
         });
 
@@ -95,10 +102,16 @@ module.exports = {
             client.end().then(() => {
                 cb(null, r)
             }).catch((err) => {
-                cb(err, null)
+                cb({
+                    type: 'danger',
+                    message: JSON.stringify(err)
+                }, null)
             })
         }).catch((e) => {
-            cb(e, null)
+            cb({
+                type: 'danger',
+                message: JSON.stringify(e)
+            }, null)
         })
     }
 }

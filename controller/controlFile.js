@@ -1,0 +1,42 @@
+module.exports = {
+
+    upload: (req, res) => {
+        var formidable = require('formidable');
+        var form = new formidable.IncomingForm();
+        var fs = require('fs');
+        var path = require('path');
+
+        form.parse(req, (err, fields, files) => {
+            console.log(fields);
+            for (const key in files) {
+                var f = files[key];
+                var oldpath = f.path;
+                var newpath = path.resolve('public', f.name);
+                fs.rename(oldpath, newpath, function (err) {
+                    if (err) res.status(404).send({ err })
+                });
+            }
+            res.status(200).send({ estado: 'File uploaded and moved!' });
+        })
+    },
+
+    listFiles: (req, res, next) => {
+        var fileName = req.query.id;
+        var fs = require('fs');
+        var path = require('path');
+        fs.readdir(path.resolve('public'), (err, files) => {
+            files.forEach(file => {
+                if (file.indexOf(fileName) > -1) {
+                    var f = path.resolve('public', file);
+                    res.sendFile(f, null, function (err) {
+                        if (err) {
+                            next(err);
+                        } else {
+                            console.log('Sent:', fileName);
+                        }
+                    });
+                }
+            });
+        })
+    }
+};

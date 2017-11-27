@@ -1,0 +1,7 @@
+{
+    "user": "autenticacion",
+    "host": "localhost",
+    "database": "app_cordoba",
+    "password": "LaFacil123",
+    "port": 5432
+}

@@ -1,18 +1,25 @@
+
 /* Import databse connect postgresql*/
 const db = require('../database/db');
 
 const login = (user, password, res) => {
     var q = 'select * from autenticacion."logged_session"($1,$2)';
-
+    console.log(q);
     db.query_callback(null, q, [user, password], (e, r) => {
         if (e) {
-            res.status(200).send(e)
+            res.status(200).send({
+                type: 'danger',
+                message: JSON.stringify(e)
+            })
         } else {
             const token = require('../security/token');
             var data = r.rows[0];
             var estado = data.estado;
             if (estado !== 'OK') {
-                res.status(200).send(data)
+                res.status(200).send({
+                    text: data.descripcion,
+                    type: 'danger'
+                })
             } else {
                 var pg_user = data.login_user,
                     pg_pass = data.login_password;
@@ -20,20 +27,18 @@ const login = (user, password, res) => {
                 var t = token.cipher_token(pg_user, pg_pass);
 
                 res.status(200).send({
-                    estado: data.estado,
-                    descripcion: data.descripcion,
+                    type: 'success',
+                    text: data.descripcion,
                     token: t,
                 })
             }
         }
     });
 }
-
 const listarUsuarios = (token, res) => {
     var q = 'SELECT * FROM autenticacion.listar_usuarios()';
     db.query_reponse(token, q, null, res);
 }
-
 const listarUsuario = (token, res) => {
     var q = 'SELECT * FROM autenticacion.listar_usuarios()';
     db.query_callback(token, q, null, (e, r) => {

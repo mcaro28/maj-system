@@ -8,13 +8,6 @@ module.exports = (app) => {
     })
   });
 
-  app.get('/login', (req, res) => {
-    const u = require('../controller/user');
-    var user = req.query.user;
-    var pass = req.query.pass;
-    u.login(user, pass, res);
-  });
-
   app.post('/login', (req, res) => {
     const u = require('../controller/user');
     console.log(req.body);
@@ -28,9 +21,18 @@ module.exports = (app) => {
     var token = req.body.token;
     u.listarUsuarios(token, res);
   });
-  app.get('/admin/listar/usuarios', (req, res) => {
-    const u = require('../controller/user');
-    var token = req.query.token;
-    u.listarUsuario(token, res);
+
+  app.post('/sistemas/lista/menu', (req, res) => {
+    const menu = require('../controller/menu');
+    var token = req.body.token;
+    menu.listarMenu(token, res);
+  });
+
+  app.post('/fileUpload', (req, res) => {
+    require('../controller/controlFile').upload(req, res);
+  });
+
+  app.get('/file', (req, res, next) => {
+    require('../controller/controlFile').listFiles(req, res, next);
   });
 }
