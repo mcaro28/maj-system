@@ -7,11 +7,12 @@ module.exports = {
         var path = require('path');
 
         form.parse(req, (err, fields, files) => {
-            console.log(fields);
+            
             for (const key in files) {
-                var f = files[key];
+                var f = files[key]; 
                 var oldpath = f.path;
-                var newpath = path.resolve('public', f.name);
+                var name = fields.name ? fields.name + '.' + f.name.split('.')[1] : f.name;
+                var newpath = path.resolve('public', name);
                 fs.rename(oldpath, newpath, function (err) {
                     if (err) res.status(404).send({ err })
                 });
