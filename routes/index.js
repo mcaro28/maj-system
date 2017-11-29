@@ -10,7 +10,6 @@ module.exports = (app) => {
 
   app.post('/login', (req, res) => {
     const u = require('../controller/user');
-    console.log(req.body);
     var user = req.body.user;
     var pass = req.body.pass;
     u.login(user, pass, res);
