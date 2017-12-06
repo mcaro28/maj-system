@@ -26,10 +26,24 @@ const login = (user, password, res) => {
 
                 var t = token.cipher_token(pg_user, pg_pass);
 
-                res.status(200).send({
-                    type: 'success',
-                    text: data.descripcion,
-                    token: t,
+                var fs = require('fs');
+                var path = require('path');
+                fs.readdir(path.resolve('public'), (err, files) => {
+                    files.forEach(file => {
+                        if (file.indexOf(user) > -1) {
+                            var f = path.resolve('public', file);
+                            var bitmap = fs.readFileSync(file);
+                            var base = new Buffer(bitmap).toString('base64');
+                            console.log(base);                            
+                            res.status(200).send({
+                                type: 'success',
+                                text: data.descripcion,
+                                token: t,
+                                image: base
+                            })
+
+                        }
+                    });
                 })
             }
         }

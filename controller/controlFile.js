@@ -7,9 +7,9 @@ module.exports = {
         var path = require('path');
 
         form.parse(req, (err, fields, files) => {
-            
+            console.log(files);
             for (const key in files) {
-                var f = files[key]; 
+                var f = files[key];
                 var oldpath = f.path;
                 var name = fields.name ? fields.name + '.' + f.name.split('.')[1] : f.name;
                 var newpath = path.resolve('public', name);
@@ -28,7 +28,7 @@ module.exports = {
         fs.readdir(path.resolve('public'), (err, files) => {
             files.forEach(file => {
                 if (file.indexOf(fileName) > -1) {
-                    var f = path.resolve('public', file);
+                    var f = path.resolve('public', file);                   
                     res.sendFile(f, null, function (err) {
                         if (err) {
                             next(err);

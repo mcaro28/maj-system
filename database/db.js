@@ -102,12 +102,14 @@ module.exports = {
             client.end().then(() => {
                 cb(null, r)
             }).catch((err) => {
+                console.log(err);
                 cb({
                     type: 'danger',
                     message: JSON.stringify(err)
                 }, null)
             })
-        }).catch((e) => {
+        }).catch((e) => { 
+            console.log(e);           
             cb({
                 type: 'danger',
                 message: JSON.stringify(e)
